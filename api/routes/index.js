@@ -8,19 +8,19 @@
  */
 
 var express = require('express');
-var mapRoute = require('./map');
+var programRoute = require('./program');
 var router = express.Router();
 
-const mapURI = '/map';
+const programURI = '/programs';
 
 /* GET routing index */
 router.get('/', function(req, res, next) {
     const baseURI = req.get('host') + req.baseUrl;
     res.json({
-        map: baseURI + mapURI
+        map: baseURI + programURI
     });
 });
 
-router.use(mapURI, mapRoute);
+router.use(programURI, programRoute);
 
 module.exports = router;

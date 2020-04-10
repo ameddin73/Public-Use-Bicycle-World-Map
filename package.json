@@ -19,6 +19,7 @@
     "sequelizer": "^1.1.4"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
     "sequelize-cli": "^5.5.1"
   }

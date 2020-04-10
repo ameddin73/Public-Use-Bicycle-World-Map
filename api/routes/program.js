@@ -9,12 +9,9 @@
 
 var express = require('express');
 var router = express.Router();
-
-const localMapJson = require('../../resources_local/map');
+const programController = require('../controllers/program');
 
 /* GET routing index */
-router.get('/', function(req, res, next) {
-    res.json(localMapJson);
-});
+router.post('/', programController.create);
 
 module.exports = router;

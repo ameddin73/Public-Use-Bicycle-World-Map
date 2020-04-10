@@ -7,8 +7,15 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const Program = require('../models')
+const Program = require('../models').Program;
 
-exports.get_all = function(req, res, next) {
-    res.send('NOT IMPLEMENTED');
+module.exports = {
+    create(req, res) {
+        return Program.create({
+            name: req.body.name,
+            city: req.body.city,
+        })
+            .then(program => res.status(201).send(program))
+            .catch(err => res.status(400).send(err));
+    },
 };
