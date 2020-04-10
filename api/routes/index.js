@@ -8,14 +8,19 @@
  */
 
 var express = require('express');
-var apiRoute = require('../api/routes/index');
+var mapRoute = require('./map');
 var router = express.Router();
 
-/* GET home page. */
+const mapURI = '/map';
+
+/* GET routing index */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    const baseURI = req.get('host') + req.baseUrl;
+    res.json({
+        map: baseURI + mapURI
+    });
 });
 
-router.use('/api/v1', apiRoute);
+router.use(mapURI, mapRoute);
 
 module.exports = router;

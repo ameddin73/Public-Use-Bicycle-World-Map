@@ -7,15 +7,22 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes/index');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT
 });
 
-router.use('/api/v1', apiRoute);
+connection.connect(function (err) {
+    if (err) {
+        console.error('Database connection failed' + err.stack);
+        return;
+    }
+    console.log('Connected to database.');
+});
 
-module.exports = router;
+exports.get_all = function(req, res, next) {
+    res.send('NOT IMPLEMENTED');
+};

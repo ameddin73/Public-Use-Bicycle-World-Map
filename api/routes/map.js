@@ -8,14 +8,13 @@
  */
 
 var express = require('express');
-var apiRoute = require('../api/routes/index');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+const localMapJson = require('../../resources_local/map');
 
-router.use('/api/v1', apiRoute);
+/* GET routing index */
+router.get('/', function(req, res, next) {
+    res.json(localMapJson);
+});
 
 module.exports = router;
