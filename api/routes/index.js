@@ -7,15 +7,20 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes/index');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
+const programRoute = require('./program');
+const programURI = '/programs';
+
+/* GET routing index */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    const baseURI = req.get('host') + req.baseUrl;
+    res.json({
+        map: baseURI + programURI
+    });
 });
 
-router.use('/api/v1', apiRoute);
+router.use(programURI, programRoute);
 
 module.exports = router;

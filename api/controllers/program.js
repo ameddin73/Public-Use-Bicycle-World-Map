@@ -7,15 +7,25 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes/index');
-var router = express.Router();
+const Program = require('../models').Program;
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.use('/api/v1', apiRoute);
-
-module.exports = router;
+module.exports = {
+    async create(req, res) {
+        return await Program.create({
+            name: req.body.name,
+            city: req.body.city,
+        })
+            .then(program => res.status(201).send(program))
+            .catch(err => res.status(400).send(err));
+    },
+    async findAll(req, res) {
+        return Program.findAll()
+            .then(program => res.status(200).send(program))
+            .catch(err => res.status(500).send(err));
+    },
+    async findByPk(req, res) {
+        return Program.findByPk(req.params.id)
+            .then(program => res.status(200).send(program))
+            .catch(err => res.status(404).send(err));
+    },
+};

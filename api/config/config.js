@@ -7,15 +7,20 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes/index');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.use('/api/v1', apiRoute);
-
-module.exports = router;
+require('dotenv').config(); // this is important!
+module.exports = {
+    "development": {
+        "username": process.env.DB_USERNAME,
+        "password": process.env.DB_PASSWORD,
+        "database": process.env.DB_DATABASE,
+        "host": process.env.DB_HOST,
+        "dialect": "mysql"
+    },
+    "production": {
+        "username": process.env.RDS_HOSTNAME,
+        "password": process.env.RDS_PASSWORD,
+        "database": process.env.RDS_DATABASE,
+        "host": process.env.RDS_HOST,
+        "dialect": "mysql"
+    }
+};
