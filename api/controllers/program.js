@@ -10,12 +10,22 @@
 const Program = require('../models').Program;
 
 module.exports = {
-    create(req, res) {
-        return Program.create({
+    async create(req, res) {
+        return await Program.create({
             name: req.body.name,
             city: req.body.city,
         })
             .then(program => res.status(201).send(program))
             .catch(err => res.status(400).send(err));
+    },
+    async findAll(req, res) {
+        return Program.findAll()
+            .then(program => res.status(200).send(program))
+            .catch(err => res.status(500).send(err));
+    },
+    async findByPk(req, res) {
+        return Program.findByPk(req.params.id)
+            .then(program => res.status(200).send(program))
+            .catch(err => res.status(404).send(err));
     },
 };

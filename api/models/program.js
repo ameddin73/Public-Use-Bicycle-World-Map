@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
   const Program = sequelize.define('Program', {
     name: DataTypes.STRING,
     city: DataTypes.STRING
-  }, {});
+  }, {
+    paranoid: true,
+  });
   Program.associate = function(models) {
     // associations can be defined here
   };

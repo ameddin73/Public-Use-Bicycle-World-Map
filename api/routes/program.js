@@ -7,11 +7,14 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const programController = require('../controllers/program');
 
-/* GET routing index */
 router.post('/', programController.create);
+
+router.get('/', programController.findAll);
+
+router.get('/:id', programController.findByPk);
 
 module.exports = router;

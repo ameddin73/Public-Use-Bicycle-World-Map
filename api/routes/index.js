@@ -7,10 +7,10 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var programRoute = require('./program');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
+const programRoute = require('./program');
 const programURI = '/programs';
 
 /* GET routing index */
