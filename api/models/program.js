@@ -1,22 +1,43 @@
-/*
- * Copyright (c) 2020 Alex Meddin
- *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
- */
-
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Program = sequelize.define('Program', {
-    name: DataTypes.STRING,
-    city: DataTypes.STRING
-  }, {
-    paranoid: true,
-  });
-  Program.associate = function(models) {
-    // associations can be defined here
-  };
-  return Program;
+    const Program = sequelize.define('Program', {
+        continent: DataTypes.STRING,
+        country: DataTypes.STRING,
+        province: DataTypes.STRING,
+        city: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        city_local: DataTypes.STRING,
+        municipality: DataTypes.STRING,
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        type: DataTypes.INTEGER,
+        status: DataTypes.INTEGER,
+        description: DataTypes.TEXT,
+        url: DataTypes.STRING,
+        start_date: DataTypes.DATE,
+        end_date: DataTypes.DATE,
+        bike_count: DataTypes.INTEGER,
+        station_count: DataTypes.INTEGER,
+        pedelec_count: DataTypes.INTEGER,
+        cargo_count: DataTypes.INTEGER,
+        latitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        longitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        map: DataTypes.STRING
+    }, {
+        paranoid: true,
+    });
+    Program.associate = function (models) {
+        // associations can be defined here
+    };
+    return Program;
 };
