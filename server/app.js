@@ -13,11 +13,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var history = require('connect-history-api-fallback');
+var cors = require('cors');
 
 var indexRouter = require('./routes');
 
 var app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json({limit: '10mb', extended: true}))
 app.use(express.urlencoded({limit: '10mb', extended: true}))
