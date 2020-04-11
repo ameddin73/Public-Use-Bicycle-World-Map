@@ -11,17 +11,29 @@ const {GoogleSpreadsheet} = require('google-spreadsheet');
 const Sheet = require('../models').Sheet;
 
 module.exports = {
-    async create(req, res) {
+    async createSheetId(req, res) {
         return await Sheet.create(req.body)
             .then(program => res.status(201).send(program))
             .catch(err => res.status(400).send(err));
     },
-    async findOne(req, res) {
-        return await Sheet.findAll({
+    async findSheetId() {
+        const sheetId = await Sheet.findAll({
             limit: 1,
             order: [['createdAt', 'DESC']]
-        })
-            .then(program => res.status(200).send(program))
-            .catch(err => res.status(500).send(err));
+        });
+        return sheetId[0].dataValues;
+    },
+    async getSheet(sheetId) {
+        console.log('Loading google sheet: ' + sheetId.sheet_id);
+        const doc = new GoogleSpreadsheet(sheetId.sheet_id);
+
+        await doc.useServiceAccountAuth({
+            client_email: sheetId.service_account_email,
+            private_key: sheetId.api_key,
+        });
+
+        await doc.loadInfo()
+        console.log('Loaded google sheet: ' + doc.title);
+        return doc.sheetsByIndex[0];
     }
 }

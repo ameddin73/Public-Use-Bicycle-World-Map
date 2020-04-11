@@ -11,9 +11,21 @@ const sheetsController = require('../controllers/sheetsController');
 
 module.exports = {
     async updatePath(req, res) {
-        return sheetsController.create(req, res);
+        return sheetsController.createSheetId(req, res);
     },
     async refresh(req, res) {
-        return null;
-    }
+        try {
+            // Get google sheet and convert it into a list of rows
+            const sheetId = await sheetsController.findSheetId();
+            const sheet = await sheetsController.getSheet(sheetId);
+            const rows = await sheet.getRows({
+                offset: 0,
+                limit: 10000,
+            });
+            res.status(200).send(rows);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(err);
+        }
+    },
 }

@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --open",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "start": "nodemon server/bin/www & npm run serve",
+    "start:server": "nodemon server/bin/www",
+    "start:client": "npm run serve",
+    "start": "run-p start:client start:server",
     "production": "npm run build && node server/bin/www"
   },
   "dependencies": {
@@ -37,6 +39,7 @@
     "@vue/cli-service": "~4.3.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
+    "npm-run-all": "^4.1.5",
     "sequelize-cli": "^5.5.1",
     "vue-template-compiler": "^2.6.11"
   },
