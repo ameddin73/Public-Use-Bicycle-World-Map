@@ -1,17 +1,19 @@
-# Public-Use-Bicycle-World-Map
-Repository for a Public Use Bicycle World Map web application. This project is designed to use the data currently found at [bikesharingmap.com](http://bikesharingmap.com) to create a more elegant, consumable, and interactive experience.
+# pubwm
 
-## Stack
+## Project setup
+```
+npm install
+```
 
-### Server
-- [x] [Node.js](https://nodejs.org/en/)
-- [x] [Express.js](https://expressjs.com/)
-- [x] [Sequelize](https://sequelize.org/)
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-### Client
-- [ ] [Vue.js](https://vuejs.org/)
-- [ ] Undecided mapping api
+### Compiles and minifies for production
+```
+npm run build
+```
 
-### Infrastructure
-- [ ] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
-- [ ] [Relational Database Service](https://aws.amazon.com/rds/)
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
