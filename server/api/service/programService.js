@@ -7,30 +7,19 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const Program = require('../models').Program;
+const programController = require('../controllers/programController');
 
 module.exports = {
     async create(req, res) {
-        return await Program.create(req.body)
-            .then(program => res.status(201).send(program))
-            .catch(err => res.status(400).send(err));
+        return programController.create(req, res);
     },
     async bulkCreate(req, res) {
-        return await Program.bulkCreate(req.body, {
-            validate: true,
-            updateOnDuplicate: ["guid"],
-        })
-            .then(program => res.status(201).send(program))
-            .catch(err => res.status(400).send(err));
+        return programController.bulkCreate(req, res);
     },
     async findAll(req, res) {
-        return await Program.findAll()
-            .then(program => res.status(200).send(program))
-            .catch(err => res.status(500).send(err));
+        return programController.findAll(req, res);
     },
     async findByPk(req, res) {
-        return await Program.findByPk(req.params.id)
-            .then(program => res.status(200).send(program))
-            .catch(err => res.status(404).send(err));
+        return programController.findAll(req, res);
     },
 };

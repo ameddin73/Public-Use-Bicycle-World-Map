@@ -7,21 +7,13 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const express = require('express');
-const router = express.Router();
+const sheetsController = require('../controllers/sheetsController');
 
-const programRoute = require('./programRouter');
-const sheetsRoute = require('./sheetsRouter');
-
-/* GET routing index displays links */
-router.get('/', function(req, res, next) {
-    const baseURI = req.get('host') + req.baseUrl;
-    res.json({
-        map: baseURI + programURI
-    });
-});
-
-router.use('/programs', programRoute);
-router.use('/sheets', sheetsRoute);
-
-module.exports = router;
+module.exports = {
+    async updatePath(req, res) {
+        return null;
+    },
+    async refresh(req, res) {
+        return null;
+    }
+}
