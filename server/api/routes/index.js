@@ -13,7 +13,7 @@ const router = express.Router();
 const programRoute = require('./programRouter');
 const programURI = '/programs';
 
-/* GET routing index */
+/* GET routing index displays links */
 router.get('/', function(req, res, next) {
     const baseURI = req.get('host') + req.baseUrl;
     res.json({

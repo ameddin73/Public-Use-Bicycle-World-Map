@@ -15,7 +15,7 @@ var logger = require('morgan');
 var history = require('connect-history-api-fallback');
 var cors = require('cors');
 
-var indexRouter = require('./routes');
+var indexRouter = require('./api/routes');
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(express.json({limit: '10mb', extended: true}))
 app.use(express.urlencoded({limit: '10mb', extended: true}))
 app.use(cookieParser());
 
-app.use('/api', indexRouter);
+app.use('/api/v1', indexRouter);
 
 app.use(history());
 app.use(express.static(path.join(__dirname, '../public/dist')));
