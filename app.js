@@ -15,19 +15,19 @@ var logger = require('morgan');
 var history = require('connect-history-api-fallback');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
-app.use(history());
 
 app.use(logger('dev'));
 app.use(express.json({limit: '10mb', extended: true}))
 app.use(express.urlencoded({limit: '10mb', extended: true}))
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public/dist')));
 
 app.use('/api', indexRouter);
-app.use('/users', usersRouter);
+
+app.use(history());
+app.use(express.static(path.join(__dirname, 'public/dist')));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
