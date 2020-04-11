@@ -1,12 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     const Sheet = sequelize.define('Sheet', {
-        path: {
+        sheet_id: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 notNull: true,
-                isUrl: true,
             }
         },
         service_account_email: {
@@ -18,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         api_key: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
             validate: {
                 notNull: true,
