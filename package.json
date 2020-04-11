@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@vue/cli": "^4.3.1",
+    "axios": "^0.19.2",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "~1.4.4",
     "core-js": "^3.6.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "^4.16.4",
     "http-errors": "~1.6.3",

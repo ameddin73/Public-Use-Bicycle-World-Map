@@ -6,15 +6,34 @@
   -
   -  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
   -->
-
 <template>
     <div class="mapList">
         <h1>Map list says hello.</h1>
+        <ul>
+            <li v-for="program in programs" :key="program.id">
+                {{ program.name }}
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
+    import axios from 'axios';
+
+
     export default {
         name: 'MapList',
+
+        data() {
+            return {
+                programs: []
+            }
+        },
+
+        mounted() {
+            axios.get('http://localhost:3000/api/v1/programs')
+                .then(response => (this.$set(this.programs = response.data)))
+                .catch(error => (console.log(error)));
+        }
     }
 </script>
