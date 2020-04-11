@@ -5,10 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "production": "npm run build && node ./bin/www",
-    "start": "npm run start:server & npm run start:client",
-    "start:client": "npm run serve",
-    "start:server": "nodemon ./bin/www"
+    "start": "nodemon server/bin/www & npm run serve",
+    "production": "npm run build && node server/bin/www"
   },
   "dependencies": {
     "@vue/cli": "^4.3.1",

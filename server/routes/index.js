@@ -8,7 +8,7 @@
  */
 
 var express = require('express');
-var apiRoute = require('../api/routes/index');
+var apiRoute = require('../api/routes');
 var router = express.Router();
 
 /* GET home page. */
