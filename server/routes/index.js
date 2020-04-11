@@ -8,11 +8,14 @@
  */
 
 var express = require('express');
+var apiRoute = require('../api/routes');
 var router = express.Router();
 
-/* GET users listing. */
+/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.render('index', { title: 'Express' });
 });
+
+router.use('/v1', apiRoute);
 
 module.exports = router;
