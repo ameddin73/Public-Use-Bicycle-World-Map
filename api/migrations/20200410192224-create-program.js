@@ -8,6 +8,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      guid: {
+        allowNull: false,
+        key: true,
+        unique: true,
+        type: Sequelize.INTEGER
+      },
       continent: {
         type: Sequelize.STRING
       },

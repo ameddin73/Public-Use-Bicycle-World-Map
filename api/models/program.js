@@ -1,25 +1,70 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     const Program = sequelize.define('Program', {
-        continent: DataTypes.STRING,
+        guid: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            key: true,
+            unique: true,
+            validate: {
+                notNull: true,
+            }
+        },
+        continent: {
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [['North America','South America','Africa','Antarctica','Asia','Oceania','Europe','Americas']],
+            }
+        },
         country: DataTypes.STRING,
         province: DataTypes.STRING,
         city: {
             type: DataTypes.STRING,
             allowNull: false,
+            validate: {
+                notNull: true,
+            },
         },
         city_local: DataTypes.STRING,
         municipality: DataTypes.STRING,
         name: {
             type: DataTypes.STRING,
             allowNull: false,
+            validate: {
+                notNull: true,
+            },
         },
-        type: DataTypes.INTEGER,
-        status: DataTypes.INTEGER,
+        type: {
+            type: DataTypes.INTEGER,
+            validate: {
+                isIn: [[4]],
+            },
+        },
+        status: {
+            type: DataTypes.INTEGER,
+            validate: {
+                isIn: [[1,2,3]],
+            },
+        },
         description: DataTypes.TEXT,
-        url: DataTypes.STRING,
-        start_date: DataTypes.DATE,
-        end_date: DataTypes.DATE,
+        url: {
+            type: DataTypes.STRING,
+            validate: {
+                isUrl: true,
+            },
+        },
+        start_date: {
+            type: DataTypes.DATE,
+            validate: {
+                isDate: true,
+            },
+        },
+        end_date: {
+            type: DataTypes.DATE,
+            validate: {
+                isDate: true,
+            },
+        },
         bike_count: DataTypes.INTEGER,
         station_count: DataTypes.INTEGER,
         pedelec_count: DataTypes.INTEGER,
@@ -27,12 +72,23 @@ module.exports = (sequelize, DataTypes) => {
         latitude: {
             type: DataTypes.FLOAT,
             allowNull: false,
+            validate: {
+                notNull: true,
+            },
         },
         longitude: {
             type: DataTypes.FLOAT,
             allowNull: false,
+            validate: {
+                notNull: true,
+            },
         },
-        map: DataTypes.STRING
+        map: {
+            type: DataTypes.STRING,
+            validate: {
+                isUrl: true,
+            },
+        }
     }, {
         paranoid: true,
     });
