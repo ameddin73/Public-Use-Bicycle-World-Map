@@ -9,9 +9,15 @@
 
 const express = require('express');
 const router = express.Router();
-const programController = require('../controllers/program');
+const programController = require('../controllers/programController');
 
-router.post('/', programController.create);
+router.post('/', function (req, res) {
+    if (req.body instanceof Array) {
+        return programController.bulkCreate(req, res);
+    } else {
+        return programController.create(req, res);
+    }
+});
 
 router.get('/', programController.findAll);
 

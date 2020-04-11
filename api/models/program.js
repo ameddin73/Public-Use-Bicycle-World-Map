@@ -1,22 +1,99 @@
-/*
- * Copyright (c) 2020 Alex Meddin
- *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
- */
-
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Program = sequelize.define('Program', {
-    name: DataTypes.STRING,
-    city: DataTypes.STRING
-  }, {
-    paranoid: true,
-  });
-  Program.associate = function(models) {
-    // associations can be defined here
-  };
-  return Program;
+    const Program = sequelize.define('Program', {
+        guid: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            key: true,
+            unique: true,
+            validate: {
+                notNull: true,
+            }
+        },
+        continent: {
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [['North America','South America','Africa','Antarctica','Asia','Oceania','Europe','Americas']],
+            }
+        },
+        country: DataTypes.STRING,
+        province: DataTypes.STRING,
+        city: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+            },
+        },
+        city_local: DataTypes.STRING,
+        municipality: DataTypes.STRING,
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true,
+            },
+        },
+        type: {
+            type: DataTypes.INTEGER,
+            validate: {
+                isIn: [[4]],
+            },
+        },
+        status: {
+            type: DataTypes.INTEGER,
+            validate: {
+                isIn: [[1,2,3]],
+            },
+        },
+        description: DataTypes.TEXT,
+        url: {
+            type: DataTypes.STRING,
+            validate: {
+                isUrl: true,
+            },
+        },
+        start_date: {
+            type: DataTypes.DATE,
+            validate: {
+                isDate: true,
+            },
+        },
+        end_date: {
+            type: DataTypes.DATE,
+            validate: {
+                isDate: true,
+            },
+        },
+        bike_count: DataTypes.INTEGER,
+        station_count: DataTypes.INTEGER,
+        pedelec_count: DataTypes.INTEGER,
+        cargo_count: DataTypes.INTEGER,
+        latitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            validate: {
+                notNull: true,
+            },
+        },
+        longitude: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            validate: {
+                notNull: true,
+            },
+        },
+        map: {
+            type: DataTypes.STRING,
+            validate: {
+                isUrl: true,
+            },
+        }
+    }, {
+        paranoid: true,
+    });
+    Program.associate = function (models) {
+        // associations can be defined here
+    };
+    return Program;
 };

@@ -11,20 +11,24 @@ const Program = require('../models').Program;
 
 module.exports = {
     async create(req, res) {
-        return await Program.create({
-            name: req.body.name,
-            city: req.body.city,
+        return await Program.create(req.body)
+            .then(program => res.status(201).send(program))
+            .catch(err => res.status(400).send(err));
+    },
+    async bulkCreate(req, res) {
+        return await Program.bulkCreate(req.body, {
+            updateOnDuplicate: ["guid"],
         })
             .then(program => res.status(201).send(program))
             .catch(err => res.status(400).send(err));
     },
     async findAll(req, res) {
-        return Program.findAll()
+        return await Program.findAll()
             .then(program => res.status(200).send(program))
             .catch(err => res.status(500).send(err));
     },
     async findByPk(req, res) {
-        return Program.findByPk(req.params.id)
+        return await Program.findByPk(req.params.id)
             .then(program => res.status(200).send(program))
             .catch(err => res.status(404).send(err));
     },

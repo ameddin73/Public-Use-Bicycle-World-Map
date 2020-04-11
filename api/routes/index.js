@@ -10,7 +10,7 @@
 const express = require('express');
 const router = express.Router();
 
-const programRoute = require('./program');
+const programRoute = require('./programRouter');
 const programURI = '/programs';
 
 /* GET routing index */
