@@ -7,9 +7,11 @@
     "build": "vue-cli-service build",
     "start:server": "nodemon ./bin/www",
     "start:client": "npm run serve",
-    "start": "npm run start:server && npm run start:client"
+    "start": "npm run start:server & npm run start:client",
+    "production": "npm run build && node ./bin/www"
   },
   "dependencies": {
+    "@vue/cli": "^4.3.1",
     "cookie-parser": "~1.4.4",
     "core-js": "^3.6.4",
     "debug": "~2.6.9",

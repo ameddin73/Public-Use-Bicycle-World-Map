@@ -9,7 +9,7 @@
 import HelloWorld from './components/HelloWorld.vue'
 
 export default {
-  name: 'App',
+  name: 'Public-Use Bicycle World Map',
   components: {
     HelloWorld
   }

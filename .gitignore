@@ -20,3 +20,4 @@ yarn-error.log*
 *.sln
 *.sw?
 /pubwm.iml
+/public/dist/

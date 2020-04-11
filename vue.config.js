@@ -7,15 +7,6 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes/index');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.use('/v1', apiRoute);
-
-module.exports = router;
+module.exports = {
+    outputDir: 'public/dist',
+};
