@@ -7,4 +7,21 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const { GoogleSpreadsheet } = require('google-spreadsheet');
+const {GoogleSpreadsheet} = require('google-spreadsheet');
+const Sheet = require('../models').Sheet;
+
+module.exports = {
+    async create(req, res) {
+        return await Sheet.create(req.body)
+            .then(program => res.status(201).send(program))
+            .catch(err => res.status(400).send(err));
+    },
+    async findOne(req, res) {
+        return await Sheet.findAll({
+            limit: 1,
+            order: [['createdAt', 'DESC']]
+        })
+            .then(program => res.status(200).send(program))
+            .catch(err => res.status(500).send(err));
+    }
+}

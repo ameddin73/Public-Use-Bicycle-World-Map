@@ -11,7 +11,7 @@ const sheetsController = require('../controllers/sheetsController');
 
 module.exports = {
     async updatePath(req, res) {
-        return null;
+        return sheetsController.create(req, res);
     },
     async refresh(req, res) {
         return null;
