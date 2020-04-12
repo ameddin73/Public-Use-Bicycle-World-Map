@@ -9,9 +9,12 @@ Repository for a Public Use Bicycle World Map web application. This project is d
 - [x] [Sequelize](https://sequelize.org/)
 
 ### Client
-- [ ] [Vue.js](https://vuejs.org/)
+- [x] [Vue.js](https://vuejs.org/)
 - [ ] Undecided mapping api
 
 ### Infrastructure
 - [ ] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
 - [ ] [Relational Database Service](https://aws.amazon.com/rds/)
+
+### Miscelanious
+- [x] [Google Sheets API](https://developers.google.com/sheets/api)
