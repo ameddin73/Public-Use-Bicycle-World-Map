@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Program = sequelize.define('Program', {
         guid: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
             key: true,
             unique: true,

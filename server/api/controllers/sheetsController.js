@@ -27,8 +27,6 @@ module.exports = {
     },
     /* Fetch the google sheet info NO ACTUAL DATA */
     async getSheet(sheetId) {
-        console.log('Loading google sheet: ' + sheetId.sheet_id);
-
         // Access sheet
         const doc = new GoogleSpreadsheet(sheetId.sheet_id);
         await doc.useServiceAccountAuth({
@@ -44,7 +42,7 @@ module.exports = {
             endColumnIndex: 1,
         });
 
-        console.log('Loaded google sheet: ' + doc.title);
+        console.log('Fetched google sheet: ' + doc.title);
         return sheet;
     },
     /* Load actual google sheet cells at specified range */
@@ -52,7 +50,6 @@ module.exports = {
         await sheet.loadCells({
             startRowIndex: offset,
             endRowIndex: offset + limit,
-            endColumnIndex: 21,
         });
         return sheet;
     }
