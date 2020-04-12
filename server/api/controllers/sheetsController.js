@@ -11,11 +11,13 @@ const {GoogleSpreadsheet} = require('google-spreadsheet');
 const Sheet = require('../models').Sheet;
 
 module.exports = {
+    /* Add new Google Sheets API access info to DB */
     async createSheetId(req, res) {
         return await Sheet.create(req.body)
             .then(program => res.status(201).send(program))
             .catch(err => res.status(400).send(err));
     },
+    /* Find stored Google Sheets API access info from DB */
     async findSheetId() {
         const sheetId = await Sheet.findAll({
             limit: 1,
@@ -23,17 +25,35 @@ module.exports = {
         });
         return sheetId[0].dataValues;
     },
+    /* Fetch the google sheet info NO ACTUAL DATA */
     async getSheet(sheetId) {
         console.log('Loading google sheet: ' + sheetId.sheet_id);
-        const doc = new GoogleSpreadsheet(sheetId.sheet_id);
 
+        // Access sheet
+        const doc = new GoogleSpreadsheet(sheetId.sheet_id);
         await doc.useServiceAccountAuth({
             client_email: sheetId.service_account_email,
             private_key: sheetId.api_key,
         });
 
-        await doc.loadInfo()
+        // Load sheet and single column (to populate cellStats)
+        await doc.loadInfo();
+        let sheet = await doc.sheetsByIndex[0];
+        await sheet.loadCells({
+            startColumnIndex: 0,
+            endColumnIndex: 1,
+        });
+
         console.log('Loaded google sheet: ' + doc.title);
-        return doc.sheetsByIndex[0];
+        return sheet;
+    },
+    /* Load actual google sheet cells at specified range */
+    async loadCells(sheet, offset, limit) {
+        await sheet.loadCells({
+            startRowIndex: offset,
+            endRowIndex: offset + limit,
+            endColumnIndex: 21,
+        });
+        return sheet;
     }
 }
