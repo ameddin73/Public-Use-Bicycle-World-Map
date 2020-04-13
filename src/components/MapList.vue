@@ -8,18 +8,16 @@
   -->
 <template>
     <div class="mapList">
-        <h1>Map list says hello.</h1>
-        <ul>
-            <li v-for="program in programs" :key="program.id">
-                {{ program.name }}
-            </li>
-        </ul>
+        <div id="map"></div>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    import mapboxgl from 'mapbox-gl';
 
+    import 'mapbox-gl/dist/mapbox-gl.css';
+    import '../styles/map.css';
 
     export default {
         name: 'MapList',
@@ -33,7 +31,38 @@
         mounted() {
             axios.get('http://localhost:3000/api/v1/programs')
                 .then(response => (this.$set(this.programs = response.data)))
+                .then(() => this.addMarkers())
                 .catch(error => (console.log(error)));
+
+            this.createMap();
+        },
+
+        methods: {
+            createMap: function () {
+                mapboxgl.accessToken = process.env.VUE_APP_MAP_TOKEN;
+                this.map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/ameddin73/ck8xynurv4jt91iqiy240ig1n',
+                })
+                this.map.resize();
+            },
+            addMarkers() {
+                this.programs.forEach(program => {
+                    try {
+                        var ll = new mapboxgl.LngLat(program.longitude, program.latitude);
+
+                        var el = document.createElement('div');
+                        el.className = 'marker';
+
+                        new mapboxgl.Marker(el)
+                            .setLngLat(ll)
+                            .addTo(this.map);
+                    } catch (err) {
+                        console.warn(err);
+                    }
+                });
+            }
+
         }
     }
 </script>
