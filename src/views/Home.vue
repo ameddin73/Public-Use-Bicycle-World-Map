@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <h1>i am home</h1>
+        <h1>Public-Use Bicycle World Map</h1>
         <MapList/>
     </div>
 </template>
