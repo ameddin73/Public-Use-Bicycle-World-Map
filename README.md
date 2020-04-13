@@ -13,8 +13,9 @@ Challengingly, the source of truth for this data is stored in a Google Sheet. Th
 ### Client
 - [x] [Vue.js](https://vuejs.org/)
 - [x] [Mapbox](https://www.mapbox.com/)
-- [ ] Google OAuth2
+- [x] [Google Identity](https://developers.google.com/identity)
 
 ### Infrastructure
 - [ ] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
 - [ ] [Relational Database Service](https://aws.amazon.com/rds/)
+- [ ] [AWS CodePipeline](https://aws.amazon.com/codepipeline/) with GitHub
