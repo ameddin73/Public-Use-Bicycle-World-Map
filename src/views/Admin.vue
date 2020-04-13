@@ -10,13 +10,13 @@
 <template>
     <div class="admin">
         <h1>Admin</h1>
-        <div id="sign-in" v-show="!signedIn()">
+        <div id="sign-in" v-show="!signedIn">
             <button v-google-signin-button="clientId" class="google-signin-button">
                 <img src="../assets/google_logo.png" alt="Google" class="google-button__icon">
                 Sign in with Google
             </button>
         </div>
-        <div id="admin-panel" v-show="admin()">
+        <div id="admin-panel" v-show="admin">
             Logged in as {{ $session.get('user') }}.
         </div>
     </div>
@@ -26,6 +26,7 @@
     import Vue from 'vue';
     import VueSession from 'vue-session/index.esm';
     import GoogleSignInButton from 'vue-google-signin-button-directive';
+    import axios from "axios";
 
     Vue.use(VueSession);
 
@@ -38,6 +39,8 @@
         data() {
             return {
                 clientId: '',
+                signedIn: false,
+                admin: false,
             }
         },
         created() {
@@ -47,16 +50,21 @@
             this.$session.clear();
         },
         methods: {
-            signedIn: function () {
-                console.log('user: ' + this.$session.get('user'));
-                return false;
-                return (this.$session.exists() && this.$session.get('user'));
-            },
             admin: function () {
-                return (this.$session.exists() && this.$session.get('user') && this.$session.get('role') === 'admin');
+                return (this.$session.exists() && this.$session.get('idToken') && this.$session.get('role') === 'admin');
             },
             OnGoogleAuthSuccess: function (idToken) {
+                console.log(idToken);
+                this.$set(this.signedIn = true);
                 this.$session.set('idToken', idToken);
+
+                axios.get('http://localhost:3000/api/v1/users/validate', {
+                    params: {
+                        idToken: idToken,
+                    },
+                })
+                    .then(response => (this.$session.set('user', response)))
+                    .catch(error => (console.log(error)));
             },
             OnGoogleAuthFail: function (err) {
                 console.error(err);

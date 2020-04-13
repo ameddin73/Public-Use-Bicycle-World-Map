@@ -12,6 +12,7 @@ const router = express.Router();
 
 const programRoute = require('./programRouter');
 const sheetsRoute = require('./sheetsRouter');
+const userRoute = require('./userRouter');
 
 /* GET routing index displays links */
 router.get('/', function(req, res, next) {
@@ -23,5 +24,6 @@ router.get('/', function(req, res, next) {
 
 router.use('/programs', programRoute);
 router.use('/sheets', sheetsRoute);
+router.use('/users', userRoute);
 
 module.exports = router;

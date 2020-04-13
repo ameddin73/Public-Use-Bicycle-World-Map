@@ -7,12 +7,29 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const express = require('express');
-const router = express.Router();
-const sheetsService = require('../service/sheetsService');
+const User = require('../models').User;
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
-router.put('/path', sheetsService.updatePath);
-
-router.get('/refresh', sheetsService.refresh);
-
-module.exports = router;
+module.exports = {
+    async getUserDetails(req) {
+        const ticket = await client.verifyIdToken({
+            idToken: req.query.idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        return ticket.getPayload();
+    },
+    async findOne(id) {
+        return User.findOne({
+            where: {
+                external_id: id,
+            }
+        })
+    },
+    async create(user) {
+        return User.create({
+            name: user.name,
+            external_id: user.id,
+        })
+    }
+};

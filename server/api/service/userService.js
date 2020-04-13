@@ -7,12 +7,23 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const express = require('express');
-const router = express.Router();
-const sheetsService = require('../service/sheetsService');
+const userController = require('../controllers/userController');
 
-router.put('/path', sheetsService.updatePath);
+module.exports = {
+    async validate(req, res) {
+        // Retrieve user from google
+        const googleUserDetails = await userController.getUserDetails(req);
 
-router.get('/refresh', sheetsService.refresh);
+        // Check for user in db
+        let user = await userController.findOne(googleUserDetails['sub']);
 
-module.exports = router;
+        if (!user) {
+            user = await userController.create({
+                name: googleUserDetails['name'],
+                id: googleUserDetails['sub'],
+            })
+        }
+
+        res.status(200).send(user);
+    },
+};

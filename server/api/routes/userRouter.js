@@ -9,10 +9,8 @@
 
 const express = require('express');
 const router = express.Router();
-const sheetsService = require('../service/sheetsService');
+const userService = require('../service/userService');
 
-router.put('/path', sheetsService.updatePath);
-
-router.get('/refresh', sheetsService.refresh);
+router.get('/validate', userService.validate);
 
 module.exports = router;
