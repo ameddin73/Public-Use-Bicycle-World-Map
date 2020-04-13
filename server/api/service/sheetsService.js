@@ -8,12 +8,14 @@
  */
 
 const moment = require('moment');
-const urlRegex = require('url-regex');
+const validator = require('validator');
+const objectHash = require('object-hash');
 const sheetsController = require('../controllers/sheetsController');
+const programController = require('../controllers/programController');
 
 const QUERY_COUNT = 10;
 const QUERY_TIMEOUT = 1000;
-const CHUNK_SIZE = 100;
+const CHUNK_SIZE = 500;
 
 module.exports = {
     async updatePath(req, res) {
@@ -22,7 +24,7 @@ module.exports = {
     async refresh(req, res) {
         try {
             // Fetch sheet metadata without data
-            const sheet = await fetchSheet(res);
+            const sheet = await fetchSheet();
 
             // Build list of entries from sheet in batches of size chunkSize
             // Allow QUERY_COUNT calls per second because of google api restrictions
@@ -32,7 +34,7 @@ module.exports = {
             let programs = [];
             let count = 0;
             for (let i = 0; i <= sheet.rowCount; i += chunkSize) {
-            // for (let i = 0; i <= 3; i += chunkSize) {
+                // for (let i = 0; i <= 3; i += chunkSize) {
                 count++;
                 if (count % QUERY_COUNT === 0) {
                     await new Promise(resolve => setTimeout(resolve, QUERY_TIMEOUT));
@@ -45,8 +47,22 @@ module.exports = {
             programs = programs.map(program => transform(program));
             console.log('Loaded rows: 1 - ' + programs.length);
 
-            programs = programs.filter(value => value.error.length > 0);
-            res.status(200).send(programs);
+            // Split into list of valid and invalid rows
+            let invalidRows = programs.filter(program => program.error.length > 0);
+            programs = programs.filter(program => program.error.length === 0)
+
+            // Destroy rows that no longer appear in the spreadsheet
+            let destroyed = await programController.destroy(programs.map(program => program.guid));
+            let upserted = await programController.bulkCreate(programs);
+
+            let result = {
+                destroyed: destroyed,
+                upserted: upserted.length,
+                invalid: invalidRows,
+                rows: upserted,
+            }
+
+            res.status(200).send(result);
         } catch (err) {
             console.error(err);
             res.status(500).send(err);
@@ -54,15 +70,11 @@ module.exports = {
     },
 }
 
-fetchSheet = async function (res) {
-    try {
-        // DB action
-        const sheetId = await sheetsController.findSheetId();
-        // Sheets api action
-        return await sheetsController.getSheet(sheetId);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+fetchSheet = async function () {
+    // DB action
+    const sheetId = await sheetsController.findSheetId();
+    // Sheets api action
+    return await sheetsController.getSheet(sheetId);
 }
 
 loadCells = async function (sheet, offset, limit) {
@@ -95,7 +107,7 @@ loadCells = async function (sheet, offset, limit) {
                 rows[i]['Longitude'] && {longitude: rows[i]['Longitude']},
                 rows[i]['Latitude'] && {latitude: rows[i]['Latitude']},
                 rows[i]['Map'] && {map: rows[i]['Map']},
-                rows[i]['pathToCell'] && {pathToCell: rows[i]['pathToCell']},
+                rows[i]['pathToRow'] && {pathToRow: rows[i]['pathToRow']},
             );
             programs.push(row);
         }
@@ -108,10 +120,23 @@ loadCells = async function (sheet, offset, limit) {
 fails validation.
  */
 transform = function (row) {
-    Object.values(row).map(value => value.trim());
     row.error = [];
+
+    // Validate raw row data
+    // Trim strings and remove empty properties
+    for (let property in row) {
+        if (row.hasOwnProperty(property) && typeof row[property] === 'string')
+            row[property] = row[property].trim();
+        if (property !== 'description' && row.hasOwnProperty(property) && typeof row[property] === 'string' && !validator.isLength(row[property], {max: 255}))
+            row.error.push(row[property] + ' is not a valid ' + property + '. This field must have less than 255 characters.');
+        if (row.hasOwnProperty(property) && !row[property] && !['city', 'latitude', 'longitude'].includes(property))
+            delete row[property];
+    }
+
     row = validateNotEmpty(row, 'city', 'City');
-    row = validateNotEmpty(row, 'name', 'Name');
+    row = validateNotEmpty(row, 'latitude', 'Latitude');
+    row = validateNotEmpty(row, 'longitude', 'Longitude');
+
     if (row.type)
         row = validateType(row, 'type', 'number', 'Type');
     if (row.status)
@@ -136,14 +161,27 @@ transform = function (row) {
         row = validateType(row, 'longitude', 'number', 'Longitude');
     if (row.map)
         row = validateUrl(row, 'map', 'Map');
-    if (row.pathToCell)
-        row = validateUrl(row, 'pathToCell', 'pathToCell');
+    if (row.pathToRow)
+        row = validateUrl(row, 'pathToRow', 'pathToRow');
+
+    if (row.type && row.type !== '4')
+        row.error.push(row.type + ' is not a valid type. Column "Type" may only contain number "4".');
+    if (row.status && !['1', '2', '3'].includes(row.status))
+        row.error.push(row.status + ' is not a valid status. Column "Status" may only contain numbers "1", "2", and "3".');
+
+    if (row.continent && !['North America', 'South America', 'Africa', 'Antarctica', 'Asia', 'Oceania', 'Europe', 'Americas'].includes(row.continent)) {
+        row.error.push(row.continent + ' is not a valid continent. Column "Continent" may only contain a continent found in the following list: '
+            + '[\"North America\",\"South America\",\"Africa\",\"Antarctica\",\"Asia\",\"Oceania\",\"Europe\",\"Americas\"]');
+    }
+
+    // Transform row into Program object
+    row.guid = objectHash([row.city, row.latitude, row.longitude]);
 
     return row;
 }
 
 validateNotEmpty = function (row, property, column) {
-    if (!row[property]) {
+    if (!row.hasOwnProperty(property) || !row[property]) {
         row.error.push('Column "' + column + '" may not be empty.');
     }
     return row;
@@ -151,17 +189,18 @@ validateNotEmpty = function (row, property, column) {
 
 validateType = function (row, property, type, column) {
     if (type === 'number') {
-        row[property] = row[property].replace(',','');
-        if (isNaN(row[property])) {
+        row[property] = row[property].replace(',', '');
+        if (isNaN(row[property]) || row[property].trim() === '') {
             row.error.push(row[property] + ' is not a valid number. Column "' + column + '" may only contain a number.');
         }
     }
+
     let formats = [
         'YYYY',
-        'YYY-MM-DD',
+        'YYYY-MM-DD',
     ]
     if (type === 'date') {
-        if (!moment(row[property], formats).isValid()) {
+        if (!moment(row[property], formats, true).isValid() || !validator.isISO8601(row[property])) {
             row.error.push(row[property] + ' is not a valid date. Column "' + column + '" may only contain a date'
                 + 'of format "YYYY-MM-DD" or "YYYY".');
         }
@@ -170,7 +209,7 @@ validateType = function (row, property, type, column) {
 }
 
 validateUrl = function (row, property, column) {
-    if (!urlRegex({exact: false, strict: false}).test(row[property])) {
+    if (!validator.isURL(row[property])) {
         row.error.push(row[property] + ' is not a valid URL. Column "' + column + '" may only contain valid URLs.');
     }
     return row;

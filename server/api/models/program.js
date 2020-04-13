@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
         guid: {
             type: DataTypes.STRING,
             allowNull: false,
-            key: true,
+            primaryKey: true,
             unique: true,
             validate: {
                 notNull: true,
@@ -27,13 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         city_local: DataTypes.STRING,
         municipality: DataTypes.STRING,
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: true,
-            },
-        },
+        name: DataTypes.STRING,
         type: {
             type: DataTypes.INTEGER,
             validate: {
