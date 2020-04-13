@@ -7,8 +7,8 @@
     "build": "vue-cli-service build",
     "start:server": "nodemon server/bin/www",
     "start:client": "npm run serve",
-    "start": "run-p start:client start:server",
-    "production": "npm install && npm run build && node server/bin/www"
+    "dev": "run-p start:client start:server",
+    "start": "npm run build && node server/bin/www"
   },
   "dependencies": {
     "@vue/cli": "^4.3.1",
