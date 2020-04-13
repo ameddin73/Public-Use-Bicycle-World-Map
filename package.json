@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --hot",
-    "build": "vue-cli-service build",
+    "build": "./node_modules/.bin/vue-cli-service build",
     "start:server": "nodemon server/bin/www",
     "start:client": "npm run serve",
     "dev": "run-p start:client start:server",
