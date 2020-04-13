@@ -10,7 +10,7 @@
 <template>
     <div class="admin">
         <h1>Admin</h1>
-        <div id="sign-in" v-show="!user.id">
+        <div id="sign-in" v-show="!user.id || user.role !== 'admin'">
             <button v-google-signin-button="clientId" class="google-signin-button">
                 <img src="../assets/google_logo.png" alt="Google" class="google-button__icon">
                 Sign in with Google
@@ -20,7 +20,18 @@
             Sorry, you're not authorized to see this page.
         </div>
         <div id="admin-panel" v-show="user.role === 'admin'">
-            Logged in as {{ $session.get('user') }}.
+            <button v-on:click="refreshDB" id="refresh-button">
+                Click to refresh database from stored Google Sheet.
+            </button>
+            Destroyed: {{ refreshResponse.destroyed }}
+            Updated or Inserted: {{ refreshResponse.upserted }}
+            Invalid Rows: {{ refreshResponse.invalid.length }}
+            Errors:
+            <ul>
+                <li v-for="row in refreshResponse.invalid" :key="row.pathToRow">
+                    {{ row.error }}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -43,6 +54,11 @@
             return {
                 clientId: '',
                 user: {},
+                refreshResponse: {
+                    destroyed: null,
+                    upserted: null,
+                    invalid: [],
+                },
             }
         },
         created() {
@@ -68,6 +84,14 @@
             },
             OnGoogleAuthFail: function (err) {
                 console.error(err);
+            },
+            refreshDB: function () {
+                axios.get('http://localhost:3000/api/v1/sheets/refresh')
+                    .then(response => {
+                        this.$set(this.refreshResponse = response.data);
+                        console.dir(this.refreshResponse);
+                    })
+                    .catch(error => (console.log(error)));
             }
         },
     }
