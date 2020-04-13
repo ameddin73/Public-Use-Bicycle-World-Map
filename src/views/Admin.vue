@@ -10,13 +10,16 @@
 <template>
     <div class="admin">
         <h1>Admin</h1>
-        <div id="sign-in" v-show="!signedIn">
+        <div id="sign-in" v-show="!user.id">
             <button v-google-signin-button="clientId" class="google-signin-button">
                 <img src="../assets/google_logo.png" alt="Google" class="google-button__icon">
                 Sign in with Google
             </button>
         </div>
-        <div id="admin-panel" v-show="admin">
+        <div id="not-allowed" v-show="user.id && user.role !== 'admin'">
+            Sorry, you're not authorized to see this page.
+        </div>
+        <div id="admin-panel" v-show="user.role === 'admin'">
             Logged in as {{ $session.get('user') }}.
         </div>
     </div>
@@ -39,8 +42,7 @@
         data() {
             return {
                 clientId: '',
-                signedIn: false,
-                admin: false,
+                user: {},
             }
         },
         created() {
@@ -50,12 +52,7 @@
             this.$session.clear();
         },
         methods: {
-            admin: function () {
-                return (this.$session.exists() && this.$session.get('idToken') && this.$session.get('role') === 'admin');
-            },
             OnGoogleAuthSuccess: function (idToken) {
-                console.log(idToken);
-                this.$set(this.signedIn = true);
                 this.$session.set('idToken', idToken);
 
                 axios.get('http://localhost:3000/api/v1/users/validate', {
@@ -63,7 +60,10 @@
                         idToken: idToken,
                     },
                 })
-                    .then(response => (this.$session.set('user', response)))
+                    .then(response => {
+                        this.$set(this.user = response.data);
+                        this.$session.set('user', response.data);
+                    })
                     .catch(error => (console.log(error)));
             },
             OnGoogleAuthFail: function (err) {
