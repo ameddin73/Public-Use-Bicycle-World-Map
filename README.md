@@ -11,7 +11,7 @@ Repository for a Public Use Bicycle World Map web application. This project is d
 
 ### Client
 - [x] [Vue.js](https://vuejs.org/)
-- [ ] Undecided mapping api
+- [x] [Mapbox](https://www.mapbox.com/)
 - [ ] Google OAuth2
 
 ### Infrastructure
