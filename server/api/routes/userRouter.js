@@ -9,24 +9,8 @@
 
 const express = require('express');
 const router = express.Router();
-const sheetsService = require('../service/sheetsService');
 const userService = require('../service/userService');
 
-router.use(async function (req, res, next) {
-    try {
-        const user = await userService.validateCredentials(req);
-        if (user.role !== 'admin') {
-            return res.status(401).send({error: 'User not authorized.'});
-        } else {
-            next();
-        }
-    } catch {
-        return res.status(403).send({error: 'Unable to authenticate user.'});
-    }
-});
-
-router.put('/path', sheetsService.updatePath);
-
-router.get('/refresh', sheetsService.refresh);
+router.get('/validate', userService.validate);
 
 module.exports = router;

@@ -10,12 +10,6 @@
 const programController = require('../controllers/programController');
 
 module.exports = {
-    async create(req, res) {
-        return programController.create(req, res);
-    },
-    async bulkCreate(req, res) {
-        return programController.bulkCreate(req, res);
-    },
     async findAll(req, res) {
         return programController.findAll(req, res);
     },

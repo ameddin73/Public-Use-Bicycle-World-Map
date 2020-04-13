@@ -8,7 +8,140 @@
   -->
 
 <template>
-   <div class="admin">
-      <h1>This will be an admin page.</h1>
-   </div>
+    <div class="admin">
+        <h1>Admin</h1>
+        <div id="sign-in" v-show="!user.id || user.role !== 'admin'">
+            <button v-google-signin-button="clientId" class="google-signin-button">
+                <img src="../assets/google_logo.png" alt="Google" class="google-button__icon">
+                Sign in with Google
+            </button>
+        </div>
+        <div id="not-allowed" v-show="user.id && user.role !== 'admin'">
+            Sorry, you're not authorized to see this page.
+        </div>
+        <div id="admin-panel" v-show="user.role === 'admin'">
+            <button v-on:click="refreshDB" id="refresh-button">
+                Click to refresh database from stored Google Sheet.
+            </button>
+            Destroyed: {{ refreshResponse.destroyed }}
+            Updated or Inserted: {{ refreshResponse.upserted }}
+            Invalid Rows: {{ refreshResponse.invalid.length }}
+            Errors:
+            <ul>
+                <li v-for="row in refreshResponse.invalid" :key="row.pathToRow">
+                    {{ row.error }}
+                </li>
+            </ul>
+        </div>
+    </div>
 </template>
+
+<script>
+    import Vue from 'vue';
+    import VueSession from 'vue-session/index.esm';
+    import GoogleSignInButton from 'vue-google-signin-button-directive';
+    import axios from "axios";
+
+    Vue.use(VueSession);
+
+    export default {
+        name: 'Admin',
+
+        directives: {
+            GoogleSignInButton,
+        },
+        data() {
+            return {
+                clientId: '',
+                user: {},
+                refreshResponse: {
+                    destroyed: null,
+                    upserted: null,
+                    invalid: [],
+                },
+            }
+        },
+        created() {
+            this.$set(this.clientId = process.env.VUE_APP_GOOGLE_CLIENT_ID);
+        },
+        mounted() {
+            this.$session.clear();
+        },
+        methods: {
+            OnGoogleAuthSuccess: function (idToken) {
+                this.$session.set('idToken', idToken);
+
+                axios.get('http://localhost:3000/api/v1/users/validate', {
+                    headers: {
+                        authorization: idToken,
+                    },
+                })
+                    .then(response => {
+                        this.$set(this.user = response.data);
+                        this.$session.set('user', response.data);
+                    })
+                    .catch(error => (console.log(error)));
+            },
+            OnGoogleAuthFail: function (err) {
+                console.error(err);
+            },
+            refreshDB: function () {
+                axios.get('http://localhost:3000/api/v1/sheets/refresh', {
+                    headers: {
+                        authorization: this.$session.get('idToken'),
+                    },
+                })
+                    .then(response => {
+                        this.$set(this.refreshResponse = response.data);
+                        console.dir(this.refreshResponse);
+                    })
+                    .catch(error => (console.log(error)));
+            }
+        },
+    }
+
+</script>
+
+<style>
+    .google-signin-button {
+        margin-top: 150px;
+        height: 150px;
+        border-width: 0;
+        background: white;
+        color: #737373;
+        border-radius: 5px;
+        white-space: nowrap;
+        box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.05);
+        transition-property: background-color, box-shadow;
+        transition-duration: 150ms;
+        transition-timing-function: ease-in-out;
+        padding-left: 24px;
+        padding-right: 24px;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: 'Roboto', arial, sans-serif;
+    }
+
+
+    .google-signin-button:focus, .google-signin-button:hover {
+        box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .google-signin-button:active {
+        background-color: #e5e5e5;
+        box-shadow: none;
+        transition-duration: 10ms;
+    }
+
+    .google-button__icon {
+        display: block;
+        vertical-align: middle;
+        margin: 8px 0 8px 8px;
+        width: 100px;
+        height: 100px;
+        box-sizing: border-box;
+    }
+</style>

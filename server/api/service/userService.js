@@ -7,26 +7,26 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-const express = require('express');
-const router = express.Router();
-const sheetsService = require('../service/sheetsService');
-const userService = require('../service/userService');
+const userController = require('../controllers/userController');
 
-router.use(async function (req, res, next) {
-    try {
-        const user = await userService.validateCredentials(req);
-        if (user.role !== 'admin') {
-            return res.status(401).send({error: 'User not authorized.'});
-        } else {
-            next();
+module.exports = {
+    async validateCredentials(req) {
+        // Retrieve user from google
+        const googleUserDetails = await userController.getUserDetails(req);
+
+        // Check for user in db
+        let user = await userController.findOne(googleUserDetails['sub']);
+
+        if (!user) {
+            user = await userController.create({
+                name: googleUserDetails['name'],
+                id: googleUserDetails['sub'],
+            })
         }
-    } catch {
-        return res.status(403).send({error: 'Unable to authenticate user.'});
+        return user;
+    },
+    async validate(req, res) {
+        let user = await module.exports.validateCredentials(req);
+        res.status(200).send(user);
     }
-});
-
-router.put('/path', sheetsService.updatePath);
-
-router.get('/refresh', sheetsService.refresh);
-
-module.exports = router;
+};
