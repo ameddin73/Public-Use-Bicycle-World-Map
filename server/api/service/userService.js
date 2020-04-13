@@ -10,7 +10,7 @@
 const userController = require('../controllers/userController');
 
 module.exports = {
-    async validate(req, res) {
+    async validateCredentials(req) {
         // Retrieve user from google
         const googleUserDetails = await userController.getUserDetails(req);
 
@@ -23,7 +23,10 @@ module.exports = {
                 id: googleUserDetails['sub'],
             })
         }
-
-        res.status(200).send(user);
+        return user;
     },
+    async validate(req, res) {
+        let user = await module.exports.validateCredentials(req);
+        res.status(200).send(user);
+    }
 };

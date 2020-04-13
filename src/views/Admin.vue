@@ -72,8 +72,8 @@
                 this.$session.set('idToken', idToken);
 
                 axios.get('http://localhost:3000/api/v1/users/validate', {
-                    params: {
-                        idToken: idToken,
+                    headers: {
+                        authorization: idToken,
                     },
                 })
                     .then(response => {
@@ -86,7 +86,11 @@
                 console.error(err);
             },
             refreshDB: function () {
-                axios.get('http://localhost:3000/api/v1/sheets/refresh')
+                axios.get('http://localhost:3000/api/v1/sheets/refresh', {
+                    headers: {
+                        authorization: this.$session.get('idToken'),
+                    },
+                })
                     .then(response => {
                         this.$set(this.refreshResponse = response.data);
                         console.dir(this.refreshResponse);

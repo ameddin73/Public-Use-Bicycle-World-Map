@@ -14,7 +14,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 module.exports = {
     async getUserDetails(req) {
         const ticket = await client.verifyIdToken({
-            idToken: req.query.idToken,
+            idToken: req.headers.authorization,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         return ticket.getPayload();
