@@ -9,18 +9,18 @@
 
 const express = require('express');
 const router = express.Router();
-const programController = require('../controllers/programController');
+const programService = require('../service/programService');
 
 router.post('/', function (req, res) {
     if (req.body instanceof Array) {
-        return programController.bulkCreate(req, res);
+        return programService.bulkCreate(req, res);
     } else {
-        return programController.create(req, res);
+        return programService.create(req, res);
     }
 });
 
-router.get('/', programController.findAll);
+router.get('/', programService.findAll);
 
-router.get('/:id', programController.findByPk);
+router.get('/:id', programService.findByPk);
 
 module.exports = router;

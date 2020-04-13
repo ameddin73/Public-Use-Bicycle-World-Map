@@ -7,15 +7,12 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
-var express = require('express');
-var apiRoute = require('../api/routes');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const sheetsService = require('../service/sheetsService');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.put('/path', sheetsService.updatePath);
 
-router.use('/v1', apiRoute);
+router.get('/refresh', sheetsService.refresh)
 
 module.exports = router;

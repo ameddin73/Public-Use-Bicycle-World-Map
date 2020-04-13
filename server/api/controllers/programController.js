@@ -7,20 +7,44 @@
  *  Alex Meddin github.com/ameddin73 ameddin73@gmail.com
  */
 
+const { Op } = require('sequelize');
 const Program = require('../models').Program;
 
 module.exports = {
-    async create(req, res) {
-        return await Program.create(req.body)
-            .then(program => res.status(201).send(program))
-            .catch(err => res.status(400).send(err));
+    async bulkCreate(programs) {
+        return Program.bulkCreate(programs, {
+            validate: true,
+            updateOnDuplicate: [
+                'guid',
+                'continent',
+                'country',
+                'province',
+                'city_local',
+                'municipality',
+                'name',
+                'type',
+                'status',
+                'description',
+                'url',
+                'start_date',
+                'end_date',
+                'bike_count',
+                'station_count',
+                'pedelec_count',
+                'cargo_count',
+                'map',
+                'updatedAt',
+            ],
+        });
     },
-    async bulkCreate(req, res) {
-        return await Program.bulkCreate(req.body, {
-            updateOnDuplicate: ["guid"],
-        })
-            .then(program => res.status(201).send(program))
-            .catch(err => res.status(400).send(err));
+    async destroy(ids) {
+        return Program.destroy({
+            where: {
+                guid:{
+                    [Op.notIn]: ids,
+                },
+            },
+        });
     },
     async findAll(req, res) {
         return await Program.findAll()
