@@ -6,15 +6,14 @@ Repository for a Public Use Bicycle World Map web application. This project is d
 ### Server
 - [x] [Node.js](https://nodejs.org/en/)
 - [x] [Express.js](https://expressjs.com/)
-- [x] [Sequelize](https://sequelize.org/)
+- [x] [Sequelize](https://sequelize.org/) (MySql)
+- [x] [Google Sheets API](https://developers.google.com/sheets/api)
 
 ### Client
 - [x] [Vue.js](https://vuejs.org/)
 - [ ] Undecided mapping api
+- [ ] Google OAuth2
 
 ### Infrastructure
 - [ ] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
 - [ ] [Relational Database Service](https://aws.amazon.com/rds/)
-
-### Miscelanious
-- [x] [Google Sheets API](https://developers.google.com/sheets/api)
