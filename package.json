@@ -33,6 +33,7 @@
     "sequelizer": "^1.1.4",
     "validator": "^13.0.0",
     "vue": "^2.6.11",
+    "vue-google-signin-button-directive": "^1.0.3",
     "vue-router": "^3.1.6",
     "vue-session": "^1.0.0",
     "vuex": "^3.1.3"

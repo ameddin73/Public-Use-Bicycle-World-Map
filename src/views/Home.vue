@@ -18,7 +18,9 @@ export default {
 
 <style>
     h1 {
-        position: fixed;
+        position: relative;
+        margin: 0%;
+        width: 100%;
         left: 50%;
         transform: translateX(-50%);
         color: aliceblue;
