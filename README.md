@@ -2,6 +2,8 @@
 This project is designed to use the data currently found at [bikesharingmap.com](http://bikesharingmap.com) to create a more elegant, consumable, and interactive experience.
 Challengingly, the source of truth for this data is stored in a Google Sheet. The client (my dad - this is a Christmas gift) requested no change in workflow. The solution: store data for the site in a database that is updated from the sheet upon request.
 
+#### Access an early beta version [here](http://pubwm.us-east-1.elasticbeanstalk.com/).
+
 ## Stack
 
 ### Server
