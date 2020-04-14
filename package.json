@@ -8,7 +8,7 @@
     "start:server": "nodemon server/bin/www",
     "start:client": "npm run serve",
     "dev": "run-p start:client start:server",
-    "start": "npm run build && node server/bin/www"
+    "start": "node server/bin/www"
   },
   "dependencies": {
     "@vue/cli": "^4.3.1",

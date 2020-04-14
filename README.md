@@ -16,6 +16,7 @@ Challengingly, the source of truth for this data is stored in a Google Sheet. Th
 - [x] [Google Identity](https://developers.google.com/identity)
 
 ### Infrastructure
-- [ ] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
+- [x] [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/)
 - [ ] [Relational Database Service](https://aws.amazon.com/rds/)
-- [ ] [AWS CodePipeline](https://aws.amazon.com/codepipeline/) with GitHub
+- [x] [AWS CodePipeline](https://aws.amazon.com/codepipeline/) with GitHub
+- [x] [AWS CodeBuild](https://aws.amazon.com/codebuild/)
