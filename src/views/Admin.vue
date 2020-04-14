@@ -41,6 +41,7 @@
     import VueSession from 'vue-session/index.esm';
     import GoogleSignInButton from 'vue-google-signin-button-directive';
     import axios from "axios";
+    axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
 
     Vue.use(VueSession);
 
@@ -71,7 +72,7 @@
             OnGoogleAuthSuccess: function (idToken) {
                 this.$session.set('idToken', idToken);
 
-                axios.get('http://localhost:3000/api/v1/users/validate', {
+                axios.get('/users/validate', {
                     headers: {
                         authorization: idToken,
                     },
@@ -86,7 +87,7 @@
                 console.error(err);
             },
             refreshDB: function () {
-                axios.get('http://localhost:3000/api/v1/sheets/refresh', {
+                axios.get('/sheets/refresh', {
                     headers: {
                         authorization: this.$session.get('idToken'),
                     },

@@ -14,6 +14,7 @@
 
 <script>
     import axios from 'axios';
+    axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
     import mapboxgl from 'mapbox-gl';
 
     import 'mapbox-gl/dist/mapbox-gl.css';
@@ -29,7 +30,7 @@
         },
 
         mounted() {
-            axios.get('http://localhost:3000/api/v1/programs')
+            axios.get('/programs')
                 .then(response => (this.$set(this.programs = response.data)))
                 .then(() => this.addMarkers())
                 .catch(error => (console.log(error)));
