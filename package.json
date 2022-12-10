@@ -18,7 +18,7 @@
     "core-js": "^3.6.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "google-auth-library": "^6.0.0",
     "google-spreadsheet": "^3.0.10",
     "http-errors": "~1.6.3",
